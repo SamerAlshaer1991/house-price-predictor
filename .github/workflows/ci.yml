@@ -41,15 +41,10 @@ jobs:
       - name: Setup MLFlow
         run: |
           docker pull ghcr.io/mlflow/mlflow:latest
-          mkdir -p ${{ github.workspace }}/mlruns
-          mkdir -p ${{ github.workspace }}/mlflow_db
           docker run -d -p 5555:5000 --name mlflow-server ghcr.io/mlflow/mlflow:latest \
-            -v ${{ github.workspace }}/mlruns:/mlruns \
-            -v ${{ github.workspace }}/mlflow_db:/mlflow_db \
-            ghcr.io/mlflow/mlflow:latest \
             mlflow server --host 0.0.0.0 \
             --backend-store-uri sqlite:///mlflow.db \
-            --default-artifact-root ./mlruns
+            --default-artifact-root /tmp/mlruns
 
 
 
@@ -58,7 +53,7 @@ jobs:
           python src/models/train_model.py \
           --config configs/model_config.yaml \
           --data data/processed/featured_house_data.csv \
-          --models-dir models \
+          --models-dir models   \
           --mlflow-tracking-uri http://localhost:5555
 
       - name: cleanup MLFlow
