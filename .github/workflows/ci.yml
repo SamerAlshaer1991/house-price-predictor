@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  workflow::
+  workflow:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
